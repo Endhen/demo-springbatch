@@ -1,0 +1,24 @@
+spring:
+    output:
+        ansi:
+            enabled: ALWAYS
+
+    batch:
+        job:
+            enabled: false
+        jdbc:
+            initialize-schema: ALWAYS
+
+    datasource:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/demo_springbatch?serverTimezone=UTC
+        username: root
+
+    jpa:
+        hibernate: 
+            ddl-auto: create-drop
+        show-sql: false
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                format_sql: true
