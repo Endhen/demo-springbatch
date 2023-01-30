@@ -3,15 +3,31 @@ spring:
         ansi:
             enabled: ALWAYS
 
+    rabbitmq: 
+        host: localhost
+        port: 5672
+        username: guest
+        password: guest
+        routingkey: batch.new-customer
+        exchange: amq.direct
+        queue: batch.queue
+
     batch:
         job:
             enabled: false
         jdbc:
             initialize-schema: ALWAYS
 
+    spring:
+        rabbitmq: 
+            host: localhost
+            port: 15672
+            username: guest
+            password: guest
+
     datasource:
         driverClassName: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/demo_springbatch?serverTimezone=UTC
+        url: jdbc:mysql://localhost:3308/demo_springbatch?serverTimezone=UTC
         username: root
 
     jpa:
