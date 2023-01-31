@@ -12,7 +12,8 @@ public class FilterProcessor implements ItemProcessor<Customer,Customer> {
     @Override
     public Customer process(@NonNull Customer customer) throws Exception {
 
-        return customer.getCountry().equals("United States") ? customer : null;
+        return customer;
+        // return customer.getCountry().equals("United States") ? customer : null;
         
     }
 }

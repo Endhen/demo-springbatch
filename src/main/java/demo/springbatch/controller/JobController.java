@@ -11,12 +11,9 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 
-@RestController
-@RequestMapping("/jobs")
+@Component
 public class JobController {
 
     @Autowired
@@ -30,35 +27,35 @@ public class JobController {
     @Qualifier("exportCSV")
     private Job exportCSVJob;
 
-    @GetMapping("/importCustomers")
-    public void importCsvToDBJob() {
-    
-        JobParameters jobParameters = new JobParametersBuilder()
-                .addLong("Started at : ", System.currentTimeMillis()).toJobParameters();
+    @RabbitListener(queues = "${spring.rabbitmq.queue}")
+    public void importCsvToDBJob(String incomingMessage) {
 
-        try {
-            jobLauncher.run(importCSVJob, jobParameters);
-        } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
-            e.printStackTrace();
+        if (incomingMessage.equals("import")) {
+        
+            JobParameters jobParameters = new JobParametersBuilder()
+                    .addLong("Started at : ", System.currentTimeMillis()).toJobParameters();
+
+            try {
+                jobLauncher.run(importCSVJob, jobParameters);
+            } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
+                e.printStackTrace();
+            }
         }
     }
-
-    @GetMapping("/exportCustomers")
-    public void exportCsvToDBJob() {
-    
-        JobParameters jobParameters = new JobParametersBuilder()
-                .addLong("Started at : ", System.currentTimeMillis()).toJobParameters();
-
-        try {
-            jobLauncher.run(exportCSVJob, jobParameters);
-        } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @RabbitListener(queues = "${spring.rabbitmq.queue}")
-    public void recievedMessage(String incomingMessage) {
-        System.out.println("Recieved Message From RabbitMQ: " + incomingMessage);
+    public void exportCsvToDBJob(String incomingMessage) {
+
+        if (incomingMessage.equals("export")) {
+
+            JobParameters jobParameters = new JobParametersBuilder()
+                    .addLong("Started at : ", System.currentTimeMillis()).toJobParameters();
+
+            try {
+                jobLauncher.run(exportCSVJob, jobParameters);
+            } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
