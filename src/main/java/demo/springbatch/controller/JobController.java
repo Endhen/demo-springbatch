@@ -1,5 +1,6 @@
 package demo.springbatch.controller;
 
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -53,5 +54,11 @@ public class JobController {
         } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @RabbitListener(queues = "${spring.rabbitmq.queue}")
+    public void recievedMessage(String incomingMessage) {
+        System.out.println("Recieved Message From RabbitMQ: " + incomingMessage);
     }
 }

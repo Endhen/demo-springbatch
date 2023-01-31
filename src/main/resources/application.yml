@@ -1,13 +1,19 @@
+server:
+    port : 8083
+
 spring:
     output:
         ansi:
             enabled: ALWAYS
 
+    main:
+        allow-bean-definition-overriding: true
+
     rabbitmq: 
         host: localhost
         port: 5672
-        username: guest
-        password: guest
+        username: batch
+        password: batch
         routingkey: batch.new-customer
         exchange: amq.direct
         queue: batch.queue
