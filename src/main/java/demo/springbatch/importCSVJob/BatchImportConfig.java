@@ -1,4 +1,4 @@
-package demo.springbatch.config;
+package demo.springbatch.importCSVJob;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -11,9 +11,6 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 
 import demo.springbatch.entity.Customer;
-import demo.springbatch.processor.FilterProcessor;
-import demo.springbatch.reader.CustomerCsvReader;
-import demo.springbatch.writer.CustomerDbWriter;
 import lombok.AllArgsConstructor;
 
 @Configuration

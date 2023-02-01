@@ -1,4 +1,4 @@
-package demo.springbatch.processor;
+package demo.springbatch.importCSVJob;
 
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.lang.NonNull;

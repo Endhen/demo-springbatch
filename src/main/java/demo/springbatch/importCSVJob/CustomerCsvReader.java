@@ -1,4 +1,4 @@
-package demo.springbatch.reader;
+package demo.springbatch.importCSVJob;
 
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
