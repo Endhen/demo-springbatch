@@ -2,7 +2,6 @@ package demo.springbatch.listener;
 
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -16,7 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-@RabbitListener(queues = "import-job-queue")
+@RabbitListener(queues = "start-queue")
 public class ImportMessageListener {
 
     @Autowired
@@ -24,40 +23,20 @@ public class ImportMessageListener {
     private Job exportCSVJob;
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-    @Autowired
     private JobLauncher jobLauncher;
 
-    private final String exchange = "batch.exchange";
-    private final String routingkey = "job.import";
-
     @RabbitHandler
-    public void process(Integer orderId) {
+    public void process(Long orderId) {
 
-        System.out.println("LISTENER : " + orderId);
-        startImportJob(orderId);
-
-        // TODO Change request status
-
-        // TODO Create the response message
-        // Message responseMessage = MessageBuilder
-        //         .withBody("Batch response".getBytes())
-        //         .build();
-
-        // Send the response message
-        // rabbitTemplate.convertSendAndReceive(exchange, routingkey, "responseMessage");
-    }
-
-    private void startImportJob(int orderId) {
         JobParameters jobParameters = new JobParametersBuilder()
-                .addLong("Started at : ", System.currentTimeMillis()).toJobParameters();
+                .addLong("order_id", orderId)
+                .addLong("Started at : ", System.currentTimeMillis())
+                .toJobParameters();
 
         try {
             jobLauncher.run(
-                exportCSVJob,
-                jobParameters
-            );
+                    exportCSVJob,
+                    jobParameters);
         } catch (JobExecutionAlreadyRunningException
                 | JobRestartException
                 | JobInstanceAlreadyCompleteException
@@ -65,4 +44,5 @@ public class ImportMessageListener {
             e.printStackTrace();
         }
     }
+
 }

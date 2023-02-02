@@ -11,6 +11,7 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 
 import demo.springbatch.entity.Customer;
+import demo.springbatch.listener.ImportJobListener;
 import lombok.AllArgsConstructor;
 
 @Configuration
@@ -30,20 +31,21 @@ public class BatchImportConfig {
     public Job importCSVJob() {
 
         return jobBuilderFactory.get("importCustomers")
-                .flow(csvToDatabase())
-                .end()
-                .build();
+            .listener(new ImportJobListener())
+            .flow(csvToDatabase())
+            .end()
+            .build();
 
     }
 
     public Step csvToDatabase() {
 
         return stepBuilderFactory.get("csv-step").<Customer, Customer>chunk(10)
-                .reader(csvReader)
-                .processor(filterProcessor)
-                .writer(dbWriter)
-                .taskExecutor(asyncTaskExecutor(10))
-                .build();
+            .reader(csvReader)
+            .processor(filterProcessor)
+            .writer(dbWriter)
+            .taskExecutor(asyncTaskExecutor(10))
+            .build();
 
     }
 
@@ -53,6 +55,7 @@ public class BatchImportConfig {
         asyncTaskExecutor.setConcurrencyLimit(limit);
 
         return asyncTaskExecutor;
+        
     }
 
 }

@@ -1,40 +1,76 @@
 package demo.springbatch.config;
 
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Declarables;
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${spring.rabbitmq.queue}")
-    String queueName;
-
-    @Value("${spring.rabbitmq.exchange}")
-    String exchange;
-
-    @Value("${spring.rabbitmq.routingkey}")
-    private String routingkey;
+    @Bean
+    public TopicExchange topicExchange() {
+      return new TopicExchange("batch-exchange.topic");
+    }
 
     @Bean
-    public Declarables topicBindings() {
-        Queue importJobQueue = new Queue("import-job-queue", true);
-        Queue successQueue = new Queue("success-queue", true);
-        Queue errorQueue = new Queue("error-queue", true);
+    public DirectExchange directExchange() {
+      return new DirectExchange("batch-exchange.direct");
+    }
 
-        TopicExchange topicExchange = new TopicExchange("batch.exchange");
+    @Bean(name = "success-queue")
+    public Queue successQueue() {
+      return new Queue("success-queue");
+    }
+
+    @Bean(name = "error-queue")
+    public Queue errorQueue() {
+      return new Queue("error-queue");
+    }
+
+    @Bean(name = "processing-queue")
+    public Queue processingQueue() {
+      return new Queue("processing-queue");
+    }
+
+    @Bean(name = "start-queue")
+    public Queue startQueue() {
+      return new Queue("start-queue");
+    }
+
+    
+    @Bean
+    public Binding directcBinding(
+            @Qualifier("start-queue") Queue startQueue, 
+            DirectExchange directExchange
+        ) {
+
+        return BindingBuilder
+            .bind(startQueue)
+            .to(directExchange)
+            .with("job.start");
+    }
+
+    @Bean
+    public Declarables topicBindings(
+            @Qualifier("processing-queue") Queue processingQueue,
+            @Qualifier("success-queue") Queue successQueue,
+            @Qualifier("error-queue") Queue errorQueue,
+            TopicExchange topicExchange
+        ) { 
 
         return new Declarables(
-            importJobQueue,
+            processingQueue,
             successQueue,
             errorQueue,
             topicExchange,
@@ -45,8 +81,8 @@ public class RabbitMQConfig {
                 .bind(errorQueue)
                 .to(topicExchange).with("job.error"),
             BindingBuilder
-                .bind(importJobQueue)
-                .to(topicExchange).with("job.import")
+                .bind(processingQueue)
+                .to(topicExchange).with("job.processing")
         );
     }
 

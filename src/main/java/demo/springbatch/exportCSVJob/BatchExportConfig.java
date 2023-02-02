@@ -5,11 +5,11 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import demo.springbatch.entity.Customer;
+import demo.springbatch.listener.ImportJobListener;
 import lombok.AllArgsConstructor;
 
 @Configuration
@@ -26,7 +26,7 @@ public class BatchExportConfig {
     public Job exportCSVJob() {
 
         return jobBuilderFactory.get("export-CSV")
-            .incrementer(new RunIdIncrementer())
+            .listener(new ImportJobListener())
             .flow(databaseToCSV())
             .end()
             .build();
