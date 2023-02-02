@@ -1,4 +1,4 @@
-package demo.springbatch.writer;
+package demo.springbatch.exportCSVJob;
 
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;

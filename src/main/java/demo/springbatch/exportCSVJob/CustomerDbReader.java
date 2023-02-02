@@ -1,4 +1,4 @@
-package demo.springbatch.reader;
+package demo.springbatch.exportCSVJob;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

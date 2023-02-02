@@ -1,4 +1,4 @@
-package demo.springbatch.repository;
+package demo.springbatch.exportCSVJob;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

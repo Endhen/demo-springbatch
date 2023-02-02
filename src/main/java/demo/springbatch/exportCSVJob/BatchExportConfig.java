@@ -1,4 +1,4 @@
-package demo.springbatch.config;
+package demo.springbatch.exportCSVJob;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -10,8 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import demo.springbatch.entity.Customer;
-import demo.springbatch.reader.CustomerDbReader;
-import demo.springbatch.writer.CustomerCsvWriter;
 import lombok.AllArgsConstructor;
 
 @Configuration
