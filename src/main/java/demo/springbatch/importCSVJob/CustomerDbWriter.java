@@ -4,7 +4,7 @@ import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.stereotype.Component;
 
 import demo.springbatch.entity.Customer;
-import demo.springbatch.exportCSVJob.CustomerRepository;
+import demo.springbatch.repository.CustomerRepository;
 
 @Component
 public class CustomerDbWriter extends RepositoryItemWriter<Customer> {
