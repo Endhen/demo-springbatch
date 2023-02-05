@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class ImportJobListener implements JobExecutionListener {
 
-	@Autowired // ! L'injection ne fonctionne pas
+	@Autowired 
 	private BatchOrderServiceInterface batchOrderService;
 
 	@Override

@@ -23,10 +23,10 @@ public class BatchExportConfig {
     private CustomerCsvWriter csvWriter;
 
     @Bean("exportCSV")
-    public Job exportCSVJob() {
+    public Job exportCSVJob(ImportJobListener importJobListener) {
 
         return jobBuilderFactory.get("export-CSV")
-            .listener(new ImportJobListener())
+            .listener(importJobListener)
             .flow(databaseToCSV())
             .end()
             .build();

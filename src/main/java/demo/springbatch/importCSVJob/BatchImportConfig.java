@@ -28,10 +28,10 @@ public class BatchImportConfig {
     
 
     @Bean("importCSV")
-    public Job importCSVJob() {
+    public Job importCSVJob(ImportJobListener importJobListener) {
 
         return jobBuilderFactory.get("importCustomers")
-            .listener(new ImportJobListener())
+            .listener(importJobListener)
             .flow(csvToDatabase())
             .end()
             .build();
