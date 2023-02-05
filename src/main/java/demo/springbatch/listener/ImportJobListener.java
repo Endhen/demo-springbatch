@@ -24,7 +24,6 @@ public class ImportJobListener implements JobExecutionListener {
 		long batchOrderId = getOrderId(jobExecution);
 
 		log.info("Start processing batch order " + batchOrderId);
-		log.info("[BATCH SERVICE] " + batchOrderService);
 		batchOrderService.updateStatus(
 			batchOrderId, 
 			OrderStatus.PROCESSING
