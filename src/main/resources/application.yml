@@ -1,5 +1,8 @@
 server:
-    port : 8083
+    port: 8083
+
+env:
+    output: src/main/resources/output/customers.csv
 
 spring:
     output:
@@ -9,7 +12,7 @@ spring:
     main:
         allow-bean-definition-overriding: true
 
-    rabbitmq: 
+    rabbitmq:
         host: localhost
         port: 5672
         username: batch
@@ -28,9 +31,9 @@ spring:
         driverClassName: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://localhost:3308/customer-service?serverTimezone=UTC
         username: root
-
+        
     jpa:
-        hibernate: 
+        hibernate:
             ddl-auto: create-drop
         show-sql: false
         properties:
